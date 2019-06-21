@@ -1,0 +1,19 @@
+{
+    "name": "bitbot",
+    "version": "1.1.0",
+    "description": "Microsoft MakeCode package for 4tronix MiniBit",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*",
+        "neopixel": "github:microsoft/pxt-neopixel#v0.6.10"
+    },
+    "files": [
+        "README.md",
+        "main.ts"
+     ],
+    "testFiles": [
+        "tests.ts"
+    ],
+    "yotta": {},
+    "public": true
+}
