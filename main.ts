@@ -90,7 +90,7 @@ enum MBColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-namespace bitbot
+namespace MiniBit
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = MBMode.Auto;
@@ -141,8 +141,8 @@ namespace bitbot
 
         if ((motor == MBMotor.Right) || (motor == MBMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P8, speed0);
-            pins.analogWritePin(AnalogPin.P12, speed1);
+            pins.analogWritePin(AnalogPin.P12, speed0);
+            pins.analogWritePin(AnalogPin.P8, speed1);
         }
     }
 
@@ -157,8 +157,8 @@ namespace bitbot
         let stopMode = 0;
         if (mode == MBStopMode.Brake)
             stopMode = 1;
-        pins.digitalWritePin(DigitalPin.P0, stopMode);
-        pins.digitalWritePin(DigitalPin.P1, stopMode);
+        pins.digitalWritePin(DigitalPin.P16, stopMode);
+        pins.digitalWritePin(DigitalPin.P14, stopMode);
         pins.digitalWritePin(DigitalPin.P8, stopMode);
         pins.digitalWritePin(DigitalPin.P12, stopMode);
     }
@@ -273,7 +273,7 @@ namespace bitbot
     {
         if (!neoStrip)
         {
-            neoStrip = neopixel.create(DigitalPin.P13, 12, NeoPixelMode.RGB);
+            neoStrip = neopixel.create(DigitalPin.P13, 4, NeoPixelMode.RGB);
             neoStrip.setBrightness(40);
         }
         return neoStrip;
