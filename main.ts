@@ -115,7 +115,8 @@ namespace MiniBit
       * @param speed speed of motor (-1023 to 1023). eg: 600
       */
     //% blockId="minibit_motor" block="drive %motor|motor(s) at speed %speed"
-    //% weight=80
+    //% weight=50
+    //% subcategory=Motors
     export function motor(motor: MBMotor, speed: number): void
     {
         let speed0 = 0;
@@ -151,7 +152,8 @@ namespace MiniBit
       * @param mode Brakes on or off
       */
     //% blockId="minibit_stop" block="stop with %mode"
-    //% weight=92
+    //% weight=80
+    //% subcategory=Motors
     export function minibit_stop(mode: MBStopMode): void
     {
         let stopMode = 0;
@@ -170,6 +172,7 @@ namespace MiniBit
     //% blockId="minibit_drive" block="drive at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
+    //% subcategory=Motors
     export function drive(speed: number): void
     {
         motor(MBMotor.Both, speed);
@@ -182,7 +185,8 @@ namespace MiniBit
       */
     //% blockId="minibit_drive_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
     //% speed.min=-1023 speed.max=1023
-    //% weight=95
+    //% weight=70
+    //% subcategory=Motors
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
         drive(speed);
@@ -198,6 +202,7 @@ namespace MiniBit
     //% blockId="minibit_spin" block="spin %direction|at speed %speed"
     //% speed.min=0 speed.max=1023
     //% weight=90
+    //% subcategory=Motors
     export function spin(direction: MBRobotDirection, speed: number): void
     {
         if (speed < 0)
@@ -222,7 +227,8 @@ namespace MiniBit
       */
     //% blockId="minibit_spin_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
     //% speed.min=0 speed.max=1023
-    //% weight=85
+    //% weight=60
+    //% subcategory=Motors
     export function spinMilliseconds(direction: MBRobotDirection, speed: number, milliseconds: number): void
     {
         spin(direction, speed);
@@ -237,7 +243,8 @@ namespace MiniBit
     * @param unit desired conversion unit
     */
     //% blockId="bitbot_sonar" block="read sonar as %unit"
-    //% weight=90
+    //% weight=100
+    //% subcategory=Sensors
     export function sonar(unit: MBPingUnit): number
     {
         // send pulse
@@ -287,21 +294,12 @@ namespace MiniBit
     }
 
     /**
-      * Show LED changes
-      */
-    //% blockId="led_show" block="show LED changes"
-    //% weight=100
-    export function ledShow(): void
-    {
-        neo().show();
-    }
-
-    /**
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
     //% blockId="minibit_set_led_color" block="set all LEDs to %rgb=mb_colours"
-    //% weight=95
+    //% weight=100
+    //% subcategory=LEDs
     export function setLedColor(rgb: number)
     {
         neo().showColor(rgb);
@@ -313,6 +311,7 @@ namespace MiniBit
       */
     //% blockId="minibit_led_clear" block="clear all LEDs"
     //% weight=90
+    //% subcategory=LEDs
     export function ledClear(): void
     {
         neo().clear();
@@ -326,7 +325,8 @@ namespace MiniBit
      * @param rgb RGB color of the LED
      */
     //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
-    //% weight=85
+    //% weight=80
+    //% subcategory=LEDs
     export function setPixelColor(ledId: number, rgb: number): void
     {
         neo().setPixelColor(ledId, rgb);
@@ -334,23 +334,74 @@ namespace MiniBit
     }
 
     /**
+     * Set the brightness of the LEDs
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="minibit_led_brightness" block="set LED brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=70
+    //% subcategory=LEDs
+    export function ledBrightness(brightness: number): void
+    {
+        neo().setBrightness(brightness);
+        updateLEDs();
+    }
+
+    /**
       * Shows a rainbow pattern on all LEDs.
       */
     //% blockId="minibit_rainbow" block="set led rainbow"
-    //% weight=80
+    //% weight=60
+    //% subcategory=LEDs
     export function ledRainbow(): void
     {
         neo().showRainbow(1, 360);
         updateLEDs()
     }
 
+    /**
+      * Get numeric value of colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% blockId="mb_colours" block=%color
+    //% weight=50
+    //% subcategory=LEDs
+    export function MBColours(color: MBColors): number
+    {
+        return color;
+    }
+
     // Advanced blocks
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
+    //% weight=100
+    //% advanced=true
+    export function setUpdateMode(updateMode: MBMode): void
+    {
+        _updateMode = updateMode;
+    }
+
+    /**
+      * Show LED changes
+      */
+    //% blockId="led_show" block="show LED changes"
+    //% weight=90
+    //% advanced=true
+    export function ledShow(): void
+    {
+        neo().show();
+    }
 
     /**
      * Rotate LEDs forward.
      */
     //% blockId="minibit_led_rotate" block="rotate LEDs"
-    //% weight=75
+    //% weight=80
     //% advanced=true
     export function ledRotate(): void
     {
@@ -372,45 +423,6 @@ namespace MiniBit
     }
 
     /**
-      * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
-      */
-    //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
-    //% weight=65
-    //% advanced=true
-    export function setUpdateMode(updateMode: MBMode): void
-    {
-        _updateMode = updateMode;
-    }
-
-    /**
-     * Set the brightness of the LEDs
-     * @param brightness a measure of LED brightness in 0-255. eg: 40
-     */
-    //% blockId="minibit_led_brightness" block="set LED brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=60
-    //% advanced=true
-    export function ledBrightness(brightness: number): void
-    {
-        neo().setBrightness(brightness);
-        updateLEDs();
-    }
-
-    /**
-      * Get numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
-      */
-    //% blockId="mb_colours" block=%color
-    //% weight=55
-    //% advanced=true
-    export function MBColours(color: MBColors): number
-    {
-        return color;
-    }
-
-    /**
       * Convert from RGB values to colour number
       *
       * @param red Red value of the LED (0 to 255)
@@ -418,7 +430,7 @@ namespace MiniBit
       * @param blue Blue value of the LED (0 to 255)
       */
     //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
-    //% weight=50
+    //% weight=60
     //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number
     {
