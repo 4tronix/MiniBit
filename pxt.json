@@ -1,6 +1,6 @@
 {
     "name": "MiniBit",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Microsoft MakeCode package for 4tronix MiniBit",
     "license": "MIT",
     "dependencies": {

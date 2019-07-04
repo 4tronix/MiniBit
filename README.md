@@ -1,7 +1,7 @@
 # MakeCode Package for 4tronix MiniBit Robot
 
 This library provides a Microsoft Makecode package for 4tronix MiniBit, see
-https://4tronix.co.uk/MiniBit/
+https://4tronix.co.uk/minibit/
 
 ## Driving the robot    
 The simplest way to drive robot is by using the `driveMilliseconds(...)` and `driveTurnMilliseconds(...)` blocks.   
