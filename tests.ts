@@ -1,66 +1,53 @@
 {
-  // Drive 100 ms forward
-  bitbot.motor(BBMotor.All, 1023);
+  // Drive full speed forward
+  MiniBit.drive(1023);
   basic.pause(100);
 
-  // Drive 100 ms reverse
-  bitbot.motor(BBMotor.All, -1023);
+  // Drive full speed reverse for 300 ms
+  MiniBit.driveMiliseconds(-1023, 300);
   basic.pause(100);
 
   // Drive 100 ms forward on left and reverse on right
-  bitbot.motor(BBMotor.Left, 1023);
-  bitbot.motor(BBMotor.Right, -1023);
+  MiniBit.motor(MBMotor.Left, 1023);
+  MiniBit.motor(MBMotor.Right, -1023);
   basic.pause(100);
-
-  // Buzz for 100 ms
-  bitbot.buzz(1);
-  basic.pause(100);
-  bitbot.buzz(0);
-
-  // Read left and right line sensor
-  basic.showNumber(bitbot.readLine(BBLineSensor.Left));
-  basic.showNumber(bitbot.readLine(BBLineSensor.Right));
-
-  // Read left and right light sensor
-  basic.showNumber(bitbot.readLight(BBLightSensor.Left));
-  basic.showNumber(bitbot.readLight(BBLightSensor.Right));
 
   // Read sonar values
-  basic.showNumber(bitbot.sonar(BBPingUnit.MicroSeconds));
-  basic.showNumber(bitbot.sonar(BBPingUnit.Centimeters));
-  basic.showNumber(bitbot.sonar(BBPingUnit.Inches));
+  basic.showNumber(MiniBit.sonar(MBPingUnit.MicroSeconds));
+  basic.showNumber(MiniBit.sonar(MBPingUnit.Centimeters));
+  basic.showNumber(MiniBit.sonar(MBPingUnit.Inches));
 
-  // Show all leds
-  bitbot.neoSetColor(neopixel.colors(NeoPixelColors.Red));
-  bitbot.neoShow();
+  // Set all leds to Red
+  MiniBit.setLedColor(MiniBit.MBColours(MBColors.Red));
+  MiniBit.neoShow();
 
   // Clear all leds
-  bitbot.neoClear();
-  bitbot.neoShow();
+  MiniBit.ledClear();
+  MiniBit.ledShow();
 
-  // Show led at position 1
-  bitbot.neoSetPixelColor(0, neopixel.colors(NeoPixelColors.Red));
-  bitbot.neoShow();
+  // Set led at position 2 to Blue
+  MiniBit.setPixelColor(2, MiniBit.MBColours(MBColors.Blue));
+  MiniBit.ledShow();
 
   // Show led rainbow
-  bitbot.neoRainbow();
-  bitbot.neoShow();
+  MiniBit.ledRainbow();
+  MiniBit.ledShow();
 
   // Show led rainbow and shift
-  bitbot.neoRainbow();
-  bitbot.neoShift();
-  bitbot.neoShow();
+  MiniBit.ledRainbow();
+  MiniBit.ledShift();
+  MiniBit.ledShow();
 
   // Show led rainbow and rotate
-  bitbot.neoRainbow();
-  bitbot.neoRotate();
-  bitbot.neoShow();
+  MiniBit.ledRainbow();
+  MiniBit.ledRotate();
+  MiniBit.ledShow();
 
   // Set brightness of leds
-  bitbot.neoBrightness(100);
-  bitbot.neoShow();
+  MiniBit.ledBrightness(100);
+  MiniBit.ledShow();
 
-  // Use neo() variable
-  bitbot.neo().clear();
-  bitbot.neo().show();
+  // Set the Manual/Automatic Update mode
+  MiniBit.setUpdateMode(MBMode.Manual);
+  MiniBit.setUpdateMode(MBMode.Auto);
 }
