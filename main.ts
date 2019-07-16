@@ -90,7 +90,7 @@ enum MBColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-namespace MiniBit
+namespace minibit
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = MBMode.Auto;
@@ -123,7 +123,7 @@ namespace MiniBit
         let speed1 = 0;
         setPWM(Math.abs(speed));
         if (speed == 0)
-            minibit_stop(MBStopMode.Coast);
+            stop(MBStopMode.Coast);
         else if (speed > 0)
         {
             speed0 = speed;
@@ -154,7 +154,7 @@ namespace MiniBit
     //% blockId="minibit_stop" block="stop with %mode"
     //% weight=80
     //% subcategory=Motors
-    export function minibit_stop(mode: MBStopMode): void
+    export function stop(mode: MBStopMode): void
     {
         let stopMode = 0;
         if (mode == MBStopMode.Brake)
@@ -191,7 +191,7 @@ namespace MiniBit
     {
         drive(speed);
         basic.pause(milliseconds);
-        minibit_stop(MBStopMode.Coast);
+        stop(MBStopMode.Coast);
     }
 
     /**
@@ -233,7 +233,7 @@ namespace MiniBit
     {
         spin(direction, speed);
         basic.pause(milliseconds);
-        minibit_stop(MBStopMode.Coast);
+        stop(MBStopMode.Coast);
     }
 
 // Sensors and Addons
