@@ -136,14 +136,14 @@ namespace minibit
         }
         if ((motor == MBMotor.Left) || (motor == MBMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P16, speed0);
-            pins.analogWritePin(AnalogPin.P14, speed1);
+            pins.analogWritePin(AnalogPin.P12, speed0);
+            pins.analogWritePin(AnalogPin.P8, speed1);
         }
 
         if ((motor == MBMotor.Right) || (motor == MBMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P12, speed0);
-            pins.analogWritePin(AnalogPin.P8, speed1);
+            pins.analogWritePin(AnalogPin.P16, speed0);
+            pins.analogWritePin(AnalogPin.P14, speed1);
         }
     }
 
