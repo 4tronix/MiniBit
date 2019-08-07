@@ -122,9 +122,9 @@ namespace minibit
         let speed0 = 0;
         let speed1 = 0;
         setPWM(Math.abs(speed));
-        if (speed == 0)
+        /*if (speed == 0)
             stop(MBStopMode.Coast);
-        else if (speed > 0)
+        else*/ if (speed > 0)
         {
             speed0 = speed;
             speed1 = 0;
