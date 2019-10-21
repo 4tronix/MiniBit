@@ -267,8 +267,8 @@ namespace minibit
         }
         switch (unit)
         {
-            case MBPingUnit.Centimeters: return d / 58;
-            case MBPingUnit.Inches: return d / 148;
+            case MBPingUnit.Centimeters: return Math.round(d / 58);
+            case MBPingUnit.Inches: return Math.round(d / 148);
             default: return d;
         }
     }
