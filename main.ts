@@ -36,7 +36,7 @@ enum MBStopMode
 
 
 /**
- * Ping unit for sensor.
+ * Ping unit for sensor. Optional Accessory
  */
 enum MBPingUnit
 {
@@ -47,6 +47,43 @@ enum MBPingUnit
     //% block="μs"
     MicroSeconds
 }
+
+/**
+  * Line sensors. Optional Accessory
+  */
+enum MBLineSensors
+{
+    //% block="left"
+    Left,
+    //% block="centre"
+    Centre,
+    //% block="right"
+    Right
+}
+
+/**
+ * Line Sensor events
+ */
+enum MBEvents {
+    //% block="found"
+    findLine = DAL.MICROBIT_PIN_EVT_RISE,
+    //% block="lost"
+    loseLine = DAL.MICROBIT_PIN_EVT_FALL
+}
+
+/**
+ * Pins used to generate events
+ */
+enum MBPins {
+    //% block="left"
+    leftLine = <number>DAL.MICROBIT_ID_IO_P0,
+    //% block="centre"
+    centreLine = DAL.MICROBIT_ID_IO_P1,
+    //% block="right"
+    rightLine = DAL.MICROBIT_ID_IO_P2
+}
+
+
 
 /**
   * Update mode for LEDs
@@ -94,6 +131,21 @@ namespace minibit
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = MBMode.Auto;
+    let _initEvents = true;
+
+// Initialise events on first use
+
+    function initEvents(): void
+    {
+        if (_initEvents)
+        {
+            pins.setEvents(DigitalPin.P0, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P1, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P2, PinEventType.Edge);
+            _initEvents = false;
+        }
+    }
+
 
 // Motor Blocks
 
@@ -242,7 +294,7 @@ namespace minibit
     * Read distance from sonar module connected to accessory connector.
     * @param unit desired conversion unit
     */
-    //% blockId="bitbot_sonar" block="read sonar as %unit"
+    //% blockId="minibit_sonar" block="read sonar as %unit"
     //% weight=100
     //% subcategory=Sensors
     export function sonar(unit: MBPingUnit): number
@@ -272,6 +324,36 @@ namespace minibit
             default: return d;
         }
     }
+
+    /**
+    * Read Line sensor value and return as True/False. True == black line
+    * @param sensor selected line sensor
+    */
+    //% blockId="lineSensor" block="%sensor| line sensor"
+    //% weight=90
+    //% subcategory=Sensors
+    export function lineSensor(sensor: MBLineSensors): boolean
+    {
+        if (sensor == MBLineSensors.Left)
+            return pins.digitalReadPin(DigitalPin.P0)===1;
+        else if (sensor == MBLineSensors.Centre)
+            return pins.digitalReadPin(DigitalPin.P1)===1;
+        else
+            return pins.digitalReadPin(DigitalPin.P2)===1;
+    }
+
+    /**
+      * Runs when line sensor finds or loses the black line
+      */
+    //% weight=80
+    //% blockId=bc_event block="on %sensor| line %event"
+    //% subcategory=Sensors
+    export function onEvent(sensor: MBPins, event: MBEvents, handler: Action)
+    {
+        initEvents();
+        control.onEvent(<number>sensor, <number>event, handler);
+    }
+
 
 // LED Blocks
 
