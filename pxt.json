@@ -9,7 +9,7 @@
     },
     "files": [
         "README.md",
-        "main.ts"
+        "minibit.ts"
      ],
     "testFiles": [
         "tests.ts"
