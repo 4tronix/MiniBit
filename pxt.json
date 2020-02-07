@@ -1,11 +1,13 @@
 {
     "name": "MiniBit",
-    "version": "1.0.6",
+    "version": "1.1.0",
     "description": "Microsoft MakeCode package for 4tronix MiniBit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "neopixel": "github:microsoft/pxt-neopixel#v0.6.10"
+        "sk6812": "github:4tronix/SK6812",
+        "fireled": "github:4tronix/FireLedsBase",
+        "firescreen": "github:4tronix/FireScreen"
     },
     "files": [
         "README.md",
