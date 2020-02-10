@@ -424,7 +424,7 @@ namespace minibit
             else
             {
                 pins.analogWritePin(AnalogPin.P16, 0);
-                pins.analogWritePin(AnalogPin.P4, rSpeed);
+                pins.analogWritePin(AnalogPin.P14, rSpeed);
             }
         }
     }
