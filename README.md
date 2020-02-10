@@ -33,9 +33,9 @@ minibit.stop(mbStopMode.Brake) # rapidly brake
 
 ## Driving the motors individually
 
-If you want more fine grain control of individal motors, use `minibit.move(...)` to drive motor either forward or reverse.
+If you want more fine grain control of individal motors, use `minibit.move(...)` to drive each motor either forward or reverse.
 You can specify the direction (Forward or Reverse) and speed between 0 and 100.
-If the left motor truns slower than the right motor, the robot will turn to the left
+If the left motor turns slower than the right motor, the robot will turn to the left
 ```blocks
 // Drive both motors forward at speed 60. Equivalent to minibit.go(mbDirection.Forward, 60)
 minibit.move(mbMotor.Both, mbDirection.Forward, 60)
@@ -55,7 +55,7 @@ This can cause the robot to veer off the straight line, either to left or to rig
 at the same speed.
 We can partially correct for this by adding a direction bias to the motor speed settings.
 If your robot is veering to the right, then set the bias to the left.
-Conversely, if your robot is turing to the left, then se the bias to the right.
+Conversely, if your robot is turning to the left, then set the bias to the right.
 It varies with speed and battery condition etc, but an approximation is that a 10% bias will result in about 15cm (6 inches)
 change of course over about 2m (6 feet).
 Note that the bias setting does not affect the old style motor blocks.
@@ -67,7 +67,6 @@ minibit.mbBias(mbRobotDirection.Left, 5)
 // eg. robot leaves straight line to left by 25cm, so bias it to the right by 15%
 minibit.mbBias(mbRobotDirection.Right, 15)
 ```
-
 
 ## Read sonar value
 
