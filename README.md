@@ -50,7 +50,7 @@ minibit.move(mbMotor.Right, mbDirection.Forward, 70)
 
 ## Making the Robot Drive Straight
 
-The small DC motors used in the Minibit and many other small robots are not guaranteed to go at the speed as each other.
+The small DC motors used in the Minibit and many other small robots are not guaranteed to go at the same speed as each other.
 This can cause the robot to veer off the straight line, either to left or to right, even when both motors are programmed to go
 at the same speed.
 We can partially correct for this by adding a direction bias to the motor speed settings.
@@ -95,7 +95,7 @@ minibit.setLedColor(mbColors.Green)
 // Clear all leds
 minibit.ledClear()
 
-// Set the FireLed at position 0 to 4 to selected colour.
+// Set the FireLed at position 0 to 3 to selected colour.
 // eg. set Fireled 3 to Red
 minibit.setPixelColor(3, 0xff0000)
 
@@ -111,17 +111,17 @@ minibit.ledRotate()
 
 There are some more advanced blocks that allow you to select colours using separate RGB values
 and select the brightness of the FireLeds.
-The brightness is set to 40 by default, but can go as high as 255
+The brightness is set to 40 by default, but can go as high as 255.
 You should be careful not to look directly at them when they are bright as they can damage eyes.
 ```blocks
-// Switch FireLedss Update Mode to Manual or Automatic
+// Switch FireLeds Update Mode to Manual or Automatic
 miniBit.setUpdateMode(mbMode.Manual);
 miniBit.setUpdateMode(mbMode.Auto);
 
 // Select colour from separate Red, Green and Blue values
 // Each of the Red, Green and Blue values can range from 0 to 255
 // This example produces a pale blue colour
-let myColour = minibit.convertRGB(50, 100, 200)
+let myColour = minibit.convertRGB(50, 100, 200);
 
 // Set brightness of FireLeds to 100
 miniBit.ledBrightness(100);

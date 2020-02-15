@@ -785,7 +785,7 @@ namespace minibit
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="bitbot_convertRGB" block="convert from red%red|green%green|blue%blue"
+    //% blockId="minibit_convertRGB" block="convert from red%red|green%green|blue%blue"
     //% weight=60
     //% subcategory=FireLeds
     //% group=Advanced
@@ -1087,7 +1087,6 @@ namespace minibit
     //% blockGap=8
     export function matShowImage(myImage: Image, rgb: number): void
     {
-        myImage.showImage(0);
         for (let i=0; i<5; i++)
         {
             for (let j=0; j<5; j++)
