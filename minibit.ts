@@ -217,7 +217,7 @@ enum mbColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='["New style blocks","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","BitFace","OLED 128x64","Old style blocks"]'
+//% groups='["New style blocks","Basic","Advanced","Special","Ultrasonic","Line Sensor","EEROM","5x5 Matrix","BitFace","OLED 128x64","Old style blocks"]'
 namespace minibit
 {
     let fireBand: fireled.Band;
@@ -237,6 +237,12 @@ namespace minibit
     let leftBias = 0;
     let rightBias = 0;
 
+    let EEROM = 0x50;	// i2c address of EEROM
+    let calibration: number[] = [0, 0, 0];
+    let leftCalib = 0;
+    let rightCalib = 0;
+    let miniModel = -1;
+
     function clamp(value: number, min: number, max: number): number
     {
         return Math.max(Math.min(max, value), min);
@@ -254,18 +260,23 @@ namespace minibit
         }
     }
 
-    /**
-      * Runs when line sensor finds or loses the black line
-      */
-    //% weight=80
-    //% blockId=bc_event block="on %sensor|line%event"
-    //% subcategory=Sensors
-    //% group="Line Sensor"
-    //% blockGap=8
-    export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
+    function getModel(): number
     {
-        initEvents();
-        control.onEvent(<number>sensor, <number>event, handler);
+        if (miniModel == -1)
+        {
+            miniModel = 13;
+            // Check we can write/read EEROM address 3 with 0x5A and 0xA5. Don't use this address for calibration values!
+            wrEEROM(0x5a, 3);
+            if (rdEEROM(3) == 0x5A)
+            {
+                wrEEROM(0xA5, 3);
+                if (rdEEROM(3) != -91) // 0xa5 is -91
+                    miniModel = 12;
+            }
+            else
+                miniModel = 12;
+        }
+        return miniModel;
     }
 
 // Block to enable Bluetooth and disable FireLeds.
@@ -275,13 +286,23 @@ namespace minibit
     */
     //% blockId="mbEnableBluetooth"
     //% block="%enable|Bluetooth"
-    //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
             btDisabled = false;
         else
             btDisabled = true;
+    }
+
+// Check model of MiniBit. v1.3 has Flash memory, 1.0, 1.1 and 1.2 are indistinguishable in software
+    /**
+      * Get version of MiniBit (1.0 or 1.2) 1.1 is not distinguishable
+    */
+    //% blockId="mbGetVersion"
+    //% block="MiniBit version"
+    export function mbGetVersion(): number
+    {
+        return getModel();
     }
 
 // Motor Blocks
@@ -307,8 +328,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
-    //% group="New style blocks"
-    //% blockGap=8
     export function go(direction: mbDirection, speed: number): void
     {
         move(mbMotor.Both, direction, speed);
@@ -324,8 +343,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
-    //% group="New style blocks"
-    //% blockGap=8
     export function goms(direction: mbDirection, speed: number, milliseconds: number): void
     {
         go(direction, speed);
@@ -342,8 +359,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory=Motors
-    //% group="New style blocks"
-    //% blockGap=8
     export function rotate(direction: mbRobotDirection, speed: number): void
     {
         if (direction == mbRobotDirection.Left)
@@ -368,8 +383,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
-    //% group="New style blocks"
-    //% blockGap=8
     export function rotatems(direction: mbRobotDirection, speed: number, milliseconds: number): void
     {
         rotate(direction, speed);
@@ -384,8 +397,6 @@ namespace minibit
     //% blockId="mbStop" block="stop with %mode"
     //% weight=60
     //% subcategory=Motors
-    //% group="New style blocks"
-    //% blockGap=8
     export function stop(mode: mbStopMode): void
     {
         let stopMode = 0;
@@ -395,6 +406,24 @@ namespace minibit
         pins.digitalWritePin(DigitalPin.P14, stopMode);
         pins.digitalWritePin(DigitalPin.P8, stopMode);
         pins.digitalWritePin(DigitalPin.P12, stopMode);
+    }
+
+    function createCalib(speed: number): void
+    {
+        if (getModel() >= 13) // Flash not supported until version 1.3
+        {        
+            let calibVal = 0;
+            if (speed < 60)
+                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
+            else
+                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+            leftCalib = 0;
+            rightCalib = 0;
+            if (calibVal < 0)
+                leftCalib = Math.abs(calibVal);
+            else
+                rightCalib = calibVal;
+        }
     }
 
     /**
@@ -407,14 +436,25 @@ namespace minibit
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
-    //% group="New style blocks"
-    //% blockGap=8
     export function move(motor: mbMotor, direction: mbDirection, speed: number): void
     {
-        speed = clamp(speed, 0, 100) * 10.23;
+        let lSpeed = 0;
+        let rSpeed = 0;
+        getModel();
+        speed = clamp(speed, 0, 100);
+	createCalib(speed); // sets bias values for "DriveStraight" if available (version 1.3 onwards)
+        speed = speed * 10.23
         setPWM(speed);
-        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
-        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if (getModel() >= 13 && leftBias == 0 && rightBias == 0)
+        {
+            lSpeed = Math.round(speed * (100 - leftCalib) / 100);
+            rSpeed = Math.round(speed * (100 - rightCalib) / 100);
+        }
+        else
+        {
+            lSpeed = Math.round(speed * (100 - leftBias) / 100);
+            rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        }
         if ((motor == mbMotor.Left) || (motor == mbMotor.Both))
         {
             if (direction == mbDirection.Forward)
@@ -444,7 +484,7 @@ namespace minibit
     }
 
     /**
-      * Set left/right bias to match motors
+      * Set left/right bias to match motors. Don't use for v1.3 and later
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
       */
@@ -452,8 +492,6 @@ namespace minibit
     //% bias.min=0 bias.max=80
     //% weight=40
     //% subcategory=Motors
-    //% group="New style blocks"
-    //% blockGap=8
     export function mbBias(direction: mbRobotDirection, bias: number): void
     {
         bias = clamp(bias, 0, 80);
@@ -469,7 +507,7 @@ namespace minibit
         }
     }
 
-// Old Motor Blocks - kept for compatibility
+// Old Motor Blocks - kept for compatibility but deprecated
     /**
       * Drive motor(s) forward or reverse.
       * @param motor motor to drive.
@@ -480,6 +518,7 @@ namespace minibit
     //% subcategory=Motors
     //% group="Old style blocks"
     //% blockGap=8
+    //% deprecated=true
     export function motor(motor: mbMotor, speed: number): void
     {
         let speed0 = 0;
@@ -518,6 +557,7 @@ namespace minibit
     //% subcategory=Motors
     //% group="Old style blocks"
     //% blockGap=8
+    //% deprecated=true
     export function drive(speed: number): void
     {
         motor(mbMotor.Both, speed);
@@ -534,6 +574,7 @@ namespace minibit
     //% subcategory=Motors
     //% group="Old style blocks"
     //% blockGap=8
+    //% deprecated=true
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
         drive(speed);
@@ -552,6 +593,7 @@ namespace minibit
     //% subcategory=Motors
     //% group="Old style blocks"
     //% blockGap=8
+    //% deprecated=true
     export function spin(direction: mbRobotDirection, speed: number): void
     {
         if (speed < 0)
@@ -580,6 +622,7 @@ namespace minibit
     //% subcategory=Motors
     //% group="Old style blocks"
     //% blockGap=8
+    //% deprecated=true
     export function spinMilliseconds(direction: mbRobotDirection, speed: number, milliseconds: number): void
     {
         spin(direction, speed);
@@ -809,7 +852,9 @@ namespace minibit
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
-// Sensors
+// Sensors etc.
+
+// Ultrasonic
     /**
     * Read distance from sonar module connected to accessory connector.
     * @param unit desired conversion unit
@@ -818,7 +863,6 @@ namespace minibit
     //% weight=100
     //% subcategory="Sensors"
     //% group=Ultrasonic
-    //% blockGap=8
     export function sonar(unit: mbPingUnit): number
     {
         // send pulse
@@ -847,6 +891,7 @@ namespace minibit
         }
     }
 
+// Line Sensors
     /**
     * Read Line sensor value and return as True/False. True == black line
     * @param sensor selected line sensor
@@ -855,7 +900,6 @@ namespace minibit
     //% weight=90
     //% subcategory=Sensors
     //% group="Line Sensor"
-    //% blockGap=8
     export function lineSensor(sensor: mbLineSensors): boolean
     {
         if (sensor == mbLineSensors.Left)
@@ -865,6 +909,149 @@ namespace minibit
         else
             return pins.digitalReadPin(DigitalPin.P2)===1;
     }
+
+    /**
+      * Runs when line sensor finds or loses the black line
+      */
+    //% weight=80
+    //% blockId=bc_event block="on %sensor|line%event"
+    //% subcategory=Sensors
+    //% group="Line Sensor"
+    export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
+    {
+        initEvents();
+        control.onEvent(<number>sensor, <number>event, handler);
+    }
+
+// EEROM "DRIVE STRAIGHT" BLOCKS
+
+    // Uses bottom 3 bytes of EEROM for motor bias data
+    // Bias values from -100 to +100. Negative values decrease Left speed, Positive decrease right speed
+    // Byte 0 = Bias at 30, 1 = Bias at 60, 2 = Bias at 90
+
+    /**
+      * Write a byte of data to EEROM at selected address of user area
+      * @param address Location in EEROM to write to
+      * @param data Byte of data to write
+      */
+    //% blockId="writeEEROM"
+    //% block="write%data|to EEROM%address"
+    //% data.min = -128 data.max = 127
+    //% weight=100
+    //% subcategory="Sensors"
+    //% group="EEROM"
+    export function writeEEROM(data: number, address: number): void
+    {
+        wrEEROM(data, address + 16);
+    }
+
+    /**
+      * Write a byte of data to EEROM at selected address
+      * @param address Location in EEROM to write to
+      * @param data Byte of data to write
+      */
+    //% blockId="rawWriteEEROM"
+    //% block="raw write%data|to EEROM%address"
+    //% data.min = -128 data.max = 127
+    //% weight=100
+    //% group="EEROM"
+    //% deprecated=true
+    export function wrEEROM(data: number, address: number): void
+    {
+        if (getModel() == 13)
+        {
+            let i2cData = pins.createBuffer(3);
+
+            i2cData[0] = address >> 8;	// address MSB
+            i2cData[1] = address & 0xff;	// address LSB
+            i2cData[2] = data & 0xff;
+            pins.i2cWriteBuffer(EEROM, i2cData, false);
+            basic.pause(3);			// needs a short pause. 3ms ok?
+        }
+    }
+
+    /**
+      * Read a byte of data from EEROM at selected address of user area
+      * @param address Location in EEROM to read from
+      */
+    //% blockId="readEEROM"
+    //% block="read EEROM%address"
+    //% weight=90
+    //% subcategory="Sensors"
+    //% group="EEROM"
+    export function readEEROM(address: number): number
+    {
+        return rdEEROM(address + 16);
+    }
+
+    // Uses bottom 3 bytes of EEROM for motor calibration. No user access
+    /**
+      * Read a byte of data from EEROM at selected address of user area
+      * @param address Location in EEROM to read from
+      */
+    //% blockId="rawReadEEROM"
+    //% block="raw read EEROMs%address"
+    //% weight=90
+    //% subcategory="Sensors"
+    //% group="EEROM"
+    //% deprecated=true
+    export function rdEEROM(address: number): number
+    {
+        if (getModel() == 13)
+        {
+            let i2cRead = pins.createBuffer(2);
+
+            i2cRead[0] = address >> 8;	// address MSB
+            i2cRead[1] = address & 0xff;	// address LSB
+            pins.i2cWriteBuffer(EEROM, i2cRead, false);
+            basic.pause(1);
+            return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
+        }
+        else
+            return 0;
+    }
+
+    /**
+      * Load Calibration data from EEROM
+      */
+    //% blockId="loadCalibration"
+    //% block="Load calibration from EEROM"
+    //% weight=80
+    //% deprecated=true
+    export function loadCalibration(): void
+    {
+	for (let i=0; i<3; i++)
+            calibration[i] = rdEEROM(i);
+    }
+
+    /**
+      * Save Calibration data to EEROM
+      */
+    //% blockId="saveCalibration"
+    //% block="Save calibration to EEROM"
+    //% weight=70
+    //% deprecated=true
+    export function saveCalibration(): void
+    {
+	for (let i=0; i<3; i++)
+            wrEEROM(calibration[i], i);
+    }
+
+    /**
+      * Get Calibration Value
+      * @param id calibration value address (0 to 2)
+      */
+    //% blockId="getCalibration"
+    //% block="calibration value%id"
+    //% weight=70
+    //% deprecated=true
+    export function getCalibration(id: number): number
+    {
+	return calibration[id];
+    }
+
+
+
 
 // Addon Boards
 
