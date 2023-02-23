@@ -242,6 +242,7 @@ namespace minibit
     let leftCalib = 0;
     let rightCalib = 0;
     let miniModel = -1;
+    let calibLoaded = false;
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -413,6 +414,8 @@ namespace minibit
         if (getModel() >= 13) // Flash not supported until version 1.3
         {        
             let calibVal = 0;
+            if(calibLoaded == false)
+                loadCalibration();
             if (speed < 60)
                 calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
             else
@@ -1022,6 +1025,7 @@ namespace minibit
     {
 	for (let i=0; i<3; i++)
             calibration[i] = rdEEROM(i);
+        calibLoaded = true;
     }
 
     /**
