@@ -1,7 +1,6 @@
 # MakeCode Package for 4tronix MiniBit Robot
 
-This library provides a Microsoft Makecode package for 4tronix MiniBit, see
-https://4tronix.co.uk/minibit/
+This library provides a Microsoft Makecode package for the [4tronix MiniBit robot](https://4tronix.co.uk/minibit)
 
 ## Driving the robot    
 The simplest way to drive the robot is by using the `go(...)` or `goms(...)` blocks.
@@ -10,13 +9,13 @@ Both motors will be driven at the selected speed and direction
 
 Move forward at speed 60 forever:
 
-```sig
+```block
 minibit.go(mbDirection.Forward, 60)
 ```
 
 Move backward at speed 100 for 2000 ms:
 
-```sig
+```block
 minibit.goms(mbDirection.Reverse, 100, 2000)
 ```
 
@@ -24,13 +23,13 @@ You can also spin the robot with the `rotate(...)` or `rotatems(...)` blocks
 
 Rotate left at speed 70:
 
-```sig
+```block
 minibit.rotate(mbRobotDirection.Left, 70)
 ```
 
 Rotate right at speed 50 for 400ms:
 
-```sig
+```block
 minibit.rotatems(mbRobotDirection.Right, 50, 400)
 ```   
 
@@ -40,13 +39,13 @@ This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command
 
 Slowly coast to a stop:
 
-```sig
+```block
 minibit.stop(mbStopMode.Coast)
 ```
 
 Rapidly brake:
 
-```sig
+```block
 minibit.stop(mbStopMode.Brake)
 ```
 
@@ -58,13 +57,13 @@ If the left motor turns slower than the right motor, the robot will turn to the 
 
 Drive both motors forward at speed 60. Equivalent to minibit.go(mbDirection.Forward, 60)
 
-```sig
+```block
 minibit.move(mbMotor.Both, mbDirection.Forward, 60)
 ```
 
 Drive left motor in reverse at speed 30:
 
-```sig
+```block
 minibit.move(mbMotor.Left, mbDirection.Reverse, 30)
 ```
 
@@ -89,13 +88,13 @@ Note that the bias setting does not affect the old style motor blocks.
 
 If the robot leaves straight line to the right by about 10cm over 2m, bias it to the left by 5%:
 
-```sig
+```block
 minibit.mbBias(mbRobotDirection.Left, 5)
 ```
 
 If the robot leaves straight line to left by 25cm, bias it to the right by 15%:
 
-```sig
+```block
 minibit.mbBias(mbRobotDirection.Right, 15)
 ```
 
@@ -104,10 +103,10 @@ minibit.mbBias(mbRobotDirection.Right, 15)
 If you have mounted the optional sonar sensor for the MiniBit you can
 also use the `MiniBit.sonar(..)` function to read the distance to obstacles:
 
-```sig
-miniBit.sonar(mbPingUnit.MicroSeconds)
-miniBit.sonar(mbPingUnit.Centimeters)
-miniBit.sonar(mbPingUnit.Inches)
+```blocks
+let distance_sec = miniBit.sonar(mbPingUnit.MicroSeconds)
+let distance_cm = miniBit.sonar(mbPingUnit.Centimeters)
+let distance_inch = miniBit.sonar(mbPingUnit.Inches)
 ```
 
 ## FireLed Functions
@@ -117,50 +116,50 @@ By default, the FireLeds are automatically updated after every setting. This mak
 However, it can slow down some effects so there is a block provided to switch the update mode to
 Manual or Automatic:
 
-```sig
+```blocks
 minibit.setUpdateMode(BBMode.Manual)
 minibit.setUpdateMode(BBMode.Auto)
 ```
 
 Set all FireLeds to Green (hard-coded RGB color):
 
-```sig
+```block
 minibit.setLedColor(0x00FF00)
 ```
 
 Set all FireLeds to Green (built-in colour selection):
 
-```sig
+```block
 minibit.setLedColor(mbColors.Green)
 ```
 
 Clear all leds. Switch all leds off:
 
-```sig
+```block
 minibit.ledClear()
 ```
 
 Set the FireLed at position 0 to 3 to selected colour. eg. set Fireled 3 to Red:
 
-```sig
+```block
 minibit.setPixelColor(3, 0xff0000)
 ```
 
 Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple):
 
-```sig
+```block
 minibit.ledRainbow()
 ```
 
 Shift FireLeds up one place, blanking the first FireLed:
 
-```sig
+```block
 minibit.ledShift()
 ```
 
 Rotate FireLeds by shifting up one and replace the first with the last:
 
-```sig
+```block
 minibit.ledRotate()
 ```
 
@@ -171,7 +170,7 @@ You should be careful not to look directly at them when they are bright as they 
 
 Set update mode to Manual or Automatic:
 
-```sig
+```blocks
 minibit.setUpdateMode(BBMode.Manual)
 minibit.setUpdateMode(BBMode.Auto)
 ```
@@ -179,13 +178,13 @@ minibit.setUpdateMode(BBMode.Auto)
 
 Select colour from separate Red, Green and Blue values. Each of the Red, Green and Blue values can range from 0 to 255. This example produces a pale blue colour:
 
-```sig
+```block
 minibit.convertRGB(50, 100, 200)
 ```
 
 Set brightness of FireLeds to 100:
 
-```sig
+```block
 miniBit.ledBrightness(100);
 ```
 
