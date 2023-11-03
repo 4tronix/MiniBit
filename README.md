@@ -6,29 +6,48 @@ https://4tronix.co.uk/minibit/
 ## Driving the robot    
 The simplest way to drive the robot is by using the `go(...)` or `goms(...)` blocks.
 With each of these blocks you specify Forward or Reverse, and a speed from 0 to 100.
-Both motors will be driven at the selected speed and direction.
-```blocks
-// Move forward at speed 60 forever
-minibit.go(mbDirection.Forward, 60)
+Both motors will be driven at the selected speed and direction
 
-// Move backward at speed 100 for 2000 ms
+Move forward at speed 60 forever:
+
+```sig
+minibit.go(mbDirection.Forward, 60)
+```
+
+Move backward at speed 100 for 2000 ms:
+
+```sig
 minibit.goms(mbDirection.Reverse, 100, 2000)
 ```
-You can also spin/rotate the robot with the `rotate(...)` or `rotatems(...)` blocks
-```blocks
-// Rotate left at speed 70
-minibit.rotate(mbRobotDirection.Left, 70)
 
-// Rotate right at speed 50 for 400ms
+You can also spin the robot with the `rotate(...)` or `rotatems(...)` blocks
+
+Rotate left at speed 70:
+
+```sig
+minibit.rotate(mbRobotDirection.Left, 70)
+```
+
+Rotate right at speed 50 for 400ms:
+
+```sig
 minibit.rotatems(mbRobotDirection.Right, 50, 400)
 ```   
 
 ## Stopping
 When the motor speed is set to zero then it stops. However, we can also use the motor itself to create a reverse generated current to brake much quicker.
-This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command to stop with braking, or coast to a halt.
-```blocks
-minibit.stop(mbStopMode.Coast) # slowly coast to a stop
-minibit.stop(mbStopMode.Brake) # rapidly brake
+This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command to stop with braking, or coast to a halt
+
+Slowly coast to a stop:
+
+```sig
+minibit.stop(mbStopMode.Coast)
+```
+
+Rapidly brake:
+
+```sig
+minibit.stop(mbStopMode.Brake)
 ```
 
 ## Driving the motors individually
@@ -36,14 +55,22 @@ minibit.stop(mbStopMode.Brake) # rapidly brake
 If you want more fine grain control of individal motors, use `minibit.move(...)` to drive each motor either forward or reverse.
 You can specify the direction (Forward or Reverse) and speed between 0 and 100.
 If the left motor turns slower than the right motor, the robot will turn to the left
-```blocks
-// Drive both motors forward at speed 60. Equivalent to minibit.go(mbDirection.Forward, 60)
+
+Drive both motors forward at speed 60. Equivalent to minibit.go(mbDirection.Forward, 60)
+
+```sig
 minibit.move(mbMotor.Both, mbDirection.Forward, 60)
+```
 
-// Drive left motor in reverse at speed 30
+Drive left motor in reverse at speed 30:
+
+```sig
 minibit.move(mbMotor.Left, mbDirection.Reverse, 30)
+```
 
-// Drive forward in a leftward curve
+Drive forward in a leftward curve:
+
+```blocks
 minibit.move(mbMotor.Left, mbDirection.Forward, 40)
 minibit.move(mbMotor.Right, mbDirection.Forward, 70)
 ```
@@ -60,23 +87,27 @@ It varies with speed and battery condition etc, but an approximation is that a 1
 change of course over about 2m (6 feet).
 Note that the bias setting does not affect the old style motor blocks.
 
-```blocks
-// eg. robot leaves straight line to the right by about 10cm over 2m, so bias it to the left by 5%
-minibit.mbBias(mbRobotDirection.Left, 5)
+If the robot leaves straight line to the right by about 10cm over 2m, bias it to the left by 5%:
 
-// eg. robot leaves straight line to left by 25cm, so bias it to the right by 15%
+```sig
+minibit.mbBias(mbRobotDirection.Left, 5)
+```
+
+If the robot leaves straight line to left by 25cm, bias it to the right by 15%:
+
+```sig
 minibit.mbBias(mbRobotDirection.Right, 15)
 ```
 
 ## Read sonar value
 
 If you have mounted the optional sonar sensor for the MiniBit you can
-also use the `MiniBit.sonar(..)` function to read the distance to obstacles.
-```blocks
-// Read sonar values
-let v1 = miniBit.sonar(mbPingUnit.MicroSeconds);
-let v2 = miniBit.sonar(mbPingUnit.Centimeters);
-let v3 = miniBit.sonar(mbPingUnit.Inches);
+also use the `MiniBit.sonar(..)` function to read the distance to obstacles:
+
+```sig
+miniBit.sonar(mbPingUnit.MicroSeconds)
+miniBit.sonar(mbPingUnit.Centimeters)
+miniBit.sonar(mbPingUnit.Inches)
 ```
 
 ## FireLed Functions
@@ -86,26 +117,50 @@ By default, the FireLeds are automatically updated after every setting. This mak
 However, it can slow down some effects so there is a block provided to switch the update mode to
 Manual or Automatic:
 
-```blocks
-// Set all FireLeds to Green (hard-coded RGB color)
+```sig
+minibit.setUpdateMode(BBMode.Manual)
+minibit.setUpdateMode(BBMode.Auto)
+```
+
+Set all FireLeds to Green (hard-coded RGB color):
+
+```sig
 minibit.setLedColor(0x00FF00)
-// Set all FireLeds to Green (built-in colour selection)
+```
+
+Set all FireLeds to Green (built-in colour selection):
+
+```sig
 minibit.setLedColor(mbColors.Green)
+```
 
-// Clear all leds
+Clear all leds. Switch all leds off:
+
+```sig
 minibit.ledClear()
+```
 
-// Set the FireLed at position 0 to 3 to selected colour.
-// eg. set Fireled 3 to Red
+Set the FireLed at position 0 to 3 to selected colour. eg. set Fireled 3 to Red:
+
+```sig
 minibit.setPixelColor(3, 0xff0000)
+```
 
-// Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple)
+Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple):
+
+```sig
 minibit.ledRainbow()
+```
 
-// Shift FireLeds up one place, blanking the first FireLed
+Shift FireLeds up one place, blanking the first FireLed:
+
+```sig
 minibit.ledShift()
+```
 
-// Rotate FireLeds by shifting up one and replace the first with the last
+Rotate FireLeds by shifting up one and replace the first with the last:
+
+```sig
 minibit.ledRotate()
 ```
 
@@ -113,17 +168,24 @@ There are some more advanced blocks that allow you to select colours using separ
 and select the brightness of the FireLeds.
 The brightness is set to 40 by default, but can go as high as 255.
 You should be careful not to look directly at them when they are bright as they can damage eyes.
-```blocks
-// Switch FireLeds Update Mode to Manual or Automatic
-miniBit.setUpdateMode(mbMode.Manual);
-miniBit.setUpdateMode(mbMode.Auto);
 
-// Select colour from separate Red, Green and Blue values
-// Each of the Red, Green and Blue values can range from 0 to 255
-// This example produces a pale blue colour
-let myColour = minibit.convertRGB(50, 100, 200);
+Set update mode to Manual or Automatic:
 
-// Set brightness of FireLeds to 100
+```sig
+minibit.setUpdateMode(BBMode.Manual)
+minibit.setUpdateMode(BBMode.Auto)
+```
+
+
+Select colour from separate Red, Green and Blue values. Each of the Red, Green and Blue values can range from 0 to 255. This example produces a pale blue colour:
+
+```sig
+minibit.convertRGB(50, 100, 200)
+```
+
+Set brightness of FireLeds to 100:
+
+```sig
 miniBit.ledBrightness(100);
 ```
 
