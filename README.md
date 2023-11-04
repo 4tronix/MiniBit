@@ -101,10 +101,10 @@ minibit.mbBias(mbRobotDirection.Right, 15)
 ## Read sonar value
 
 If you have mounted the optional sonar sensor for the MiniBit you can
-also use the `MiniBit.sonar(..)` function to read the distance to obstacles:
+also use the `miniBit.sonar(..)` function to read the distance to obstacles:
 
-```blocks
-let distance_sec = miniBit.sonar(mbPingUnit.MicroSeconds)
+```block
+let distance_us = miniBit.sonar(mbPingUnit.MicroSeconds)
 let distance_cm = miniBit.sonar(mbPingUnit.Centimeters)
 let distance_inch = miniBit.sonar(mbPingUnit.Inches)
 ```
@@ -117,8 +117,8 @@ However, it can slow down some effects so there is a block provided to switch th
 Manual or Automatic:
 
 ```blocks
-minibit.setUpdateMode(BBMode.Manual)
-minibit.setUpdateMode(BBMode.Auto)
+minibit.setUpdateMode(mbMode.Manual)
+minibit.setUpdateMode(mbMode.Auto)
 ```
 
 Set all FireLeds to Green (hard-coded RGB color):
@@ -185,7 +185,7 @@ minibit.convertRGB(50, 100, 200)
 Set brightness of FireLeds to 100:
 
 ```block
-miniBit.ledBrightness(100);
+miniBit.ledBrightness(100)
 ```
 
 ## Supported targets
