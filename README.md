@@ -51,7 +51,7 @@ minibit.stop(mbStopMode.Brake)
 
 ## Driving the motors individually
 
-If you want more fine grain control of individal motors, use `minibit.move(...)` to drive each motor either forward or reverse.
+If you want more fine grain control of individal motors, use `move(...)` to drive each motor either forward or reverse.
 You can specify the direction (Forward or Reverse) and speed between 0 and 100.
 If the left motor turns slower than the right motor, the robot will turn to the left
 
@@ -101,12 +101,12 @@ minibit.mbBias(mbRobotDirection.Right, 15)
 ## Read sonar value
 
 If you have mounted the optional sonar sensor for the MiniBit you can
-also use the `miniBit.sonar(..)` function to read the distance to obstacles:
+also use the `sonar(..)` function to read the distance to obstacles:
 
-```block
-let distance_us = miniBit.sonar(mbPingUnit.MicroSeconds)
-let distance_cm = miniBit.sonar(mbPingUnit.Centimeters)
-let distance_inch = miniBit.sonar(mbPingUnit.Inches)
+```blocks
+let distance_us = minibit.sonar(mbPingUnit.MicroSeconds)
+let distance_cm = minibit.sonar(mbPingUnit.Centimeters)
+let distance_inch = minibit.sonar(mbPingUnit.Inches)
 ```
 
 ## FireLed Functions
@@ -171,10 +171,9 @@ You should be careful not to look directly at them when they are bright as they 
 Set update mode to Manual or Automatic:
 
 ```blocks
-minibit.setUpdateMode(BBMode.Manual)
-minibit.setUpdateMode(BBMode.Auto)
+minibit.setUpdateMode(mbMode.Manual)
+minibit.setUpdateMode(mbMode.Auto)
 ```
-
 
 Select colour from separate Red, Green and Blue values. Each of the Red, Green and Blue values can range from 0 to 255. This example produces a pale blue colour:
 
@@ -185,7 +184,7 @@ minibit.convertRGB(50, 100, 200)
 Set brightness of FireLeds to 100:
 
 ```block
-miniBit.ledBrightness(100)
+minibit.ledBrightness(100)
 ```
 
 ## Supported targets
