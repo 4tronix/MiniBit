@@ -121,15 +121,10 @@ minibit.setUpdateMode(mbMode.Manual)
 minibit.setUpdateMode(mbMode.Auto)
 ```
 
-Set all FireLeds to Green (hard-coded RGB color):
+Set all FireLeds to Green (hard-coded RGB color or built-in colour selection - look at Javascript to see the difference):
 
-```block
+```blocks
 minibit.setLedColor(0x00FF00)
-```
-
-Set all FireLeds to Green (built-in colour selection):
-
-```block
 minibit.setLedColor(mbColors.Green)
 ```
 
