@@ -1151,11 +1151,11 @@ namespace minibit
       * Action on IR message received
       */
     //% weight=100
-    //% blockId=onIrEventAddon
-    //% block="on add-on IR key%key"
+    //% blockId=onIrEvent
+    //% block="on IR key%key"
     //% subcategory=Addons
     //% group=InfraRed
-    export function onIREventAddon(event: MBirKeys, handler: Action)
+    export function onIREvent(event: MBirKeys, handler: Action)
     {
         irCore.initEvents(DigitalPin.P15)
         control.onEvent(irEvent, <number>event, handler)
@@ -1165,11 +1165,11 @@ namespace minibit
      * Check if IR key pressed
      */
     //% weight=90
-    //% blockId=IRKeyAddon
-    //% block="add-on IR key%key|was pressed"
+    //% blockId=IRKey
+    //% block="IR key%key|was pressed"
     //% subcategory=Addons
     //% group=InfraRed
-    export function irKeyAddon(key: MBirKeys): boolean
+    export function irKey(key: MBirKeys): boolean
     {
 	return (irCore.LastCode() == key)
     }
@@ -1178,11 +1178,11 @@ namespace minibit
       * Last IR Code received as number
       */
     //% weight=80
-    //% blockId=lastIRCodeAddon
-    //% block="add-on IR code"
+    //% blockId=lastIRCode
+    //% block="IR code"
     //% subcategory=Addons
     //% group=InfraRed
-    export function lastIRCodeAddon(): number
+    export function lastIRCode(): number
     {
 	return irCore.LastCode()
     }
@@ -1191,11 +1191,11 @@ namespace minibit
       * IR Key Codes as number
       */
     //% weight=70
-    //% blockId=IRKeyCodeAddon
-    //% block="add-on IR Key%key"
+    //% blockId=IRKeyCode
+    //% block="IR Key%key"
     //% subcategory=Addons
     //% group=InfraRed
-    export function irKeyCodeAddon(key: MBirNoAny): number
+    export function irKeyCode(key: MBirNoAny): number
     {
 	return key
     }
