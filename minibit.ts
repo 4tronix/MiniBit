@@ -328,6 +328,7 @@ namespace minibit
     let rightCalib = 0;
     let miniModel = -1;
     let calibLoaded = false;
+    const irEvent = 1995
 
     function clamp(value: number, min: number, max: number): number
     {
