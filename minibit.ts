@@ -214,6 +214,91 @@ enum mbColors
 }
 
 /**
+  * IR Key code translations
+  */
+enum MBirKeys
+{
+    //% block="any"
+    Any=0,
+    //% block="1"
+    One=162,
+    //% block="2"
+    Two=98,
+    //% block="3"
+    Three=226,
+    //% block="4"
+    Four=34,
+    //% block="5"
+    Five=2,
+    //% block="6"
+    Six=194,
+    //% block="save"
+    Save=224,
+    //% block="■"
+    Stop=168,
+    //% block="load"
+    Load=144,
+    //% block="X"
+    Cross=104,
+    //% block="║"
+    Pause=152,
+    //% block="/"
+    Tick=176,
+    //% block="↑"
+    Up=24,
+    //% block="↓"
+    Down=74,
+    //% block="←"
+    Left=16,
+    //% block="→"
+    Right=90,
+    //% block="►"
+    Go=56
+}
+
+/**
+  * IR Key code translations without the Any code
+  */
+enum MBirNoAny
+{
+    //% block="1"
+    One=162,
+    //% block="2"
+    Two=98,
+    //% block="3"
+    Three=226,
+    //% block="4"
+    Four=34,
+    //% block="5"
+    Five=2,
+    //% block="6"
+    Six=194,
+    //% block="save"
+    Save=224,
+    //% block="■"
+    Stop=168,
+    //% block="load"
+    Load=144,
+    //% block="X"
+    Cross=104,
+    //% block="║"
+    Pause=152,
+    //% block="/"
+    Tick=176,
+    //% block="↑"
+    Up=24,
+    //% block="↓"
+    Down=74,
+    //% block="←"
+    Left=16,
+    //% block="→"
+    Right=90,
+    //% block="►"
+    Go=56
+}
+
+
+/**
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
@@ -1058,6 +1143,62 @@ namespace minibit
 
 
 // Addon Boards
+
+// Add-on Infrared Receiver Blocks
+
+    /**
+      * Action on IR message received
+      */
+    //% weight=100
+    //% blockId=onIrEventAddon
+    //% block="on add-on IR key%key"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function onIREventAddon(event: MBirKeys, handler: Action)
+    {
+        irCore.initEvents(DigitalPin.P15)
+        control.onEvent(irEvent, <number>event, handler)
+    }
+
+    /**
+     * Check if IR key pressed
+     */
+    //% weight=90
+    //% blockId=IRKeyAddon
+    //% block="add-on IR key%key|was pressed"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function irKeyAddon(key: MBirKeys): boolean
+    {
+	return (irCore.LastCode() == key)
+    }
+
+    /**
+      * Last IR Code received as number
+      */
+    //% weight=80
+    //% blockId=lastIRCodeAddon
+    //% block="add-on IR code"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function lastIRCodeAddon(): number
+    {
+	return irCore.LastCode()
+    }
+
+    /**
+      * IR Key Codes as number
+      */
+    //% weight=70
+    //% blockId=IRKeyCodeAddon
+    //% block="add-on IR Key%key"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function irKeyCodeAddon(key: MBirNoAny): number
+    {
+	return key
+    }
+
 
 // 5x5 FireLed Matrix 
 
